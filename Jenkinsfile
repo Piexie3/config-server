@@ -26,15 +26,15 @@ pipeline{
                 }
 			}
 		}
-//         stage("Sonarqube analysis"){
-//             steps{
-//                 script {
-//                     withSonarQubeEnv( credentialsId: "jenkins-sonarqube-token"){
-//                         sh "mvn sonar:sonar"
-//                     }
-//                 }
-//             }
-//         }
+        stage("Sonarqube analysis"){
+            steps{
+                script {
+                    withSonarQubeEnv( credentialsId: "jenkins-sonarqube-token"){
+                        sh "mvn sonar:sonar"
+                    }
+                }
+            }
+        }
         stage("Test stage"){
             steps{
                 sh "echo 'hello world Second'"

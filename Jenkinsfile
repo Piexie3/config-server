@@ -6,6 +6,13 @@ pipeline{
 	}
 	environment{
         GITHUB_REPO= credentials('GITHUB_REPO')
+        APP_NAME = "config-server",
+        RELEASE = "v1.0.0",
+        DOCKER_USER= credentials('DOCKER_USER')
+        DOCKER_PASS=credentials('DOCKER_PASS')
+        IMAGE_NAME= "${DOCKER_USER}" + "/"+ "${APP_NAME}"
+        IMAGE_TAG="${RELEASE}-${BUILD_NUMBER}"
+        DOCKER_IMAGE_URL="${IMAGE_NAME}:latest"
 	}
 
 	stages{
@@ -41,6 +48,19 @@ pipeline{
             steps{
                 script {
                     waitForQualityGate abortPipeline: false, credentialsId: "jenkins-sonarqube-token"
+                }
+            }
+        }
+        stage("Build and Push Docker Image"){
+            steps{
+                script {
+                    docker.withRegistry('',DOCKER_PASS){
+                        docker_image = docker.build "${IMAGE_NAME}"
+                    }
+                    docker.withRegistry('',DOCKER_PASS){
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
+                    }
                 }
             }
         }

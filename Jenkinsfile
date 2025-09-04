@@ -8,9 +8,9 @@ pipeline{
         GITHUB_REPO= credentials('GITHUB_REPO')
         APP_NAME = "config-server",
         RELEASE = "v1.0.0",
-        DOCKER_USER= credentials('DOCKER_USER')
-        DOCKER_PASS=credentials('DOCKER_PASS')
-        IMAGE_NAME= "${DOCKER_USER}" + "/"+ "${APP_NAME}"
+        REGISTRY_USER= credentials('REGISTRY_USER')
+        DOCKER_PASS=credentials('IMAGEREGISTRY')
+        IMAGE_NAME= "${REGISTRY_USER}" + "/"+ "${APP_NAME}"
         IMAGE_TAG="${RELEASE}-${BUILD_NUMBER}"
         DOCKER_IMAGE_URL="${IMAGE_NAME}:latest"
 	}

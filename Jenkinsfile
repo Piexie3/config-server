@@ -35,5 +35,10 @@ pipeline{
 //                 }
 //             }
 //         }
+        stage {
+            steps{
+                sh "echo 'hello world'"
+            }
+        }
 	}
 }

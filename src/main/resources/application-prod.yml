@@ -1,0 +1,79 @@
+spring:
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${CONFIG_GIT_URL}
+          username: ${GIT_USERNAME}
+          password: ${GIT_TOKEN}
+          basedir: target/config
+          searchPaths: configurations/prod
+  bus:
+    enabled: true
+    refresh:
+      enabled: true
+  kafka:
+    bootstrap-servers: ${BOOTSTRAP_SERVER}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: all
+      retries: 3
+      batch-size: 16384
+      linger-ms: 5
+      buffer-memory: 33554432
+      compression-type: snappy
+      max-request-size: 1048576
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        delivery.timeout.ms: 120000
+        request.timeout.ms: 30000
+    consumer:
+      group-id: config-server-group
+      auto-offset-reset: earliest
+      enable-auto-commit: true
+      auto-commit-interval: 1000
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      ssl.endpoint.identification.algorithm: ""
+      ssl.truststore.type: JKS
+      session-timeout-ms: 30000
+      heartbeat-interval-ms: 10000
+      max-poll-interval-ms: 300000
+      max-poll-records: 500
+      fetch-min-size: 1
+      fetch-max-wait: 500
+      properties:
+        isolation.level: read_committed
+        partition.assignment.strategy: org.apache.kafka.clients.consumer.RoundRobinAssignor
+    client-id: ${spring.application.name}
+    properties:
+      security.protocol: SASL_SSL
+      sasl.mechanism: SCRAM-SHA-256
+      sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="${KAFKA_USERNAME}" password="${KAFKA_PASSWORD}";
+      connections.max.idle.ms: 540000
+      reconnect.backoff.ms: 50
+      reconnect.backoff.max.ms: 1000
+      retry.backoff.ms: 100
+      metadata.max.age.ms: 300000
+      metadata.max.idle.ms: 300000
+
+logging:
+  level:
+    org.apache.kafka: INFO
+    org.springframework.kafka: INFO
+    org.apache.kafka.common.network.SslTransportLayer: INFO
+
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,bus-refresh
+  endpoint:
+    health:
+      show-details: always
+    bus-refresh:
+      enabled: true

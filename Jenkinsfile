@@ -5,7 +5,7 @@ pipeline{
 		maven 'maven3'
 	}
 	environment{
-        GITHUB_REPO= "https://github.com/Piexie3/hekopay-core.git"
+        GITHUB_REPO= credentials('GITHUB_REPO')
 	}
 
 	stages{
@@ -37,9 +37,11 @@ pipeline{
                 }
             }
         }
-        stage("Test stage"){
+        stage("Quality gate"){
             steps{
-                sh "echo 'hello world Second'"
+                script {
+                    waitForQualityGate abortPipeline: false, credentialsId: "jenkins-sonarqube-token"
+                }
             }
         }
 	}

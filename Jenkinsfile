@@ -6,8 +6,8 @@ pipeline{
 	}
 	environment{
         GITHUB_REPO= credentials('GITHUB_REPO')
-        APP_NAME = "config-server",
-        RELEASE = "v1.0.0",
+        APP_NAME = "config-server"
+        RELEASE = "v1.0.0"
         REGISTRY_USER= credentials('REGISTRY_USER')
         DOCKER_PASS=credentials('IMAGEREGISTRY')
         IMAGE_NAME= "${REGISTRY_USER}" + "/"+ "${APP_NAME}"

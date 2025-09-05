@@ -5,6 +5,7 @@ pipeline{
 		maven 'maven3'
 	}
 	environment{
+        GITHUB_REPO= credentials('GITHUB_REPO')
         APP_NAME = "config-server"
         RELEASE = "v1.0.0"
         REGISTRY_USER= credentials('REGISTRY_USER')
@@ -21,7 +22,7 @@ pipeline{
 		}
 		stage("Check out from SCM"){
 			steps {
-                git branch: 'main', credentialsId: 'github', url: 'GITHUB_REPO'
+                git branch: 'main', credentialsId: 'github', url: "${GITHUB_REPO}"
 			}
 		}
 		stage("build application"){
